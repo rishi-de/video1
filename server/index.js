@@ -1,6 +1,16 @@
+const express = require("express");
+const path = require("path");
+const http = require("http");
 const { Server } = require("socket.io");
 
-const io = new Server(8000, {
+const app = express();
+app.use(express.static("public"));
+app.use("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
+});
+
+const server = http.createServer(app);
+const io = new Server(server, {
   cors: true,
 });
 
@@ -35,4 +45,8 @@ io.on("connection", (socket) => {
     console.log("peer:nego:done", ans);
     io.to(to).emit("peer:nego:final", { from: socket.id, ans });
   });
+});
+
+server.listen(8000, () => {
+  console.log("Server listening on port 8000");
 });
