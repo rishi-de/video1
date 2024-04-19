@@ -2,8 +2,13 @@ const express = require("express");
 const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
+const cors = require("cors"); // Import the cors middleware
 
 const app = express();
+
+// Use cors middleware
+app.use(cors());
+
 app.use(express.static("public"));
 app.use("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
